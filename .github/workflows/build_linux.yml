@@ -1,0 +1,47 @@
+name: 'Build Linux'
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    # run every saturday at 4:41 AM
+    - cron: '41 4 * * SAT'
+  workflow_dispatch:
+jobs:
+  # 32- and 64-bit linux builds
+  build-linux:
+    runs-on: ubuntu-latest
+    #env: 
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: "build x86"
+      run: bash docker/build.sh ubuntu x86
+
+    - name: "build x64"
+      run: bash docker/build.sh ubuntu x86_64
+
+    # release bundle
+    - uses: actions/upload-artifact@v2
+      with:
+        name: opengml-ubuntu-x86
+        path: artifacts-ubuntu-x86/
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: opengml-ubuntu-x86_64
+        path: artifacts-ubuntu-x86_64/
+    
+    # appimages
+    - uses: actions/upload-artifact@v2
+      with:
+        name: ogm-ubuntu-x86.AppImage
+        path: ogm-ubuntu-x86.AppImage
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: ogm-ubuntu-x86_64.AppImage
+        path: ogm-ubuntu-x64.AppImage
+  
