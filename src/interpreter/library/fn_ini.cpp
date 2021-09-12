@@ -111,8 +111,16 @@ void ogm::interpreter::fn::ini_read_real(VO out, V section, V key, V d)
         _sec.c_str(), _key.c_str(), std::to_string(_def).c_str()
     );
 
-    real_t r = std::stod(value);
-    out = r;
+    try
+    {
+        real_t r = std::stod(value);
+        out = r;
+    }
+    catch (std::exception& e)
+    {
+        // backup in case no string was found.
+        out = 0;
+    }
 }
 
 void ogm::interpreter::fn::ini_section_exists(VO out, V section)
